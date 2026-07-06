@@ -1,19 +1,25 @@
 import { createContext, useEffect, useState } from "react";
+
+import { STORAGE_KEYS } from "@/shared/constants/storageKeys";
+import { storage } from "@/shared/utils/storage";
 export const ThemeContext = createContext();
+
 export default function ThemeProvider({ children }) {
   const [mode, setMode] = useState(
-    localStorage.getItem("mode") || "light"
+    storage.get(STORAGE_KEYS.MODE) || "light"
   );
 
   const [colorTheme, setColorTheme] = useState(
-    localStorage.getItem("colorTheme") || "theme-default"
+    storage.get(STORAGE_KEYS.COLOR_THEME) || "theme-default"
   );
 
   useEffect(() => {
     const root = document.documentElement;
 
+    // Dark Mode
     root.classList.toggle("dark", mode === "dark");
 
+    // Remove previous theme
     root.classList.remove(
       "theme-default",
       "theme-purple",
@@ -21,10 +27,12 @@ export default function ThemeProvider({ children }) {
       "theme-blue"
     );
 
+    // Apply current theme
     root.classList.add(colorTheme);
 
-    localStorage.setItem("mode", mode);
-    localStorage.setItem("colorTheme", colorTheme);
+    // Save preferences
+    storage.set(STORAGE_KEYS.MODE, mode);
+    storage.set(STORAGE_KEYS.COLOR_THEME, colorTheme);
   }, [mode, colorTheme]);
 
   return (

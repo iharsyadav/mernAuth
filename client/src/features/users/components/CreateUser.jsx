@@ -1,24 +1,24 @@
 import { useState } from "react";
-import useFetch from "../../hooks/useFetch";
-import { createUser } from "../../services/userService";
+
+import useFetch from "@/shared/hooks/useFetch";
+import { createUser } from "@/features/users/services/userService";
 
 const CreateUser = ({ refreshUsers }) => {
-  const { fetchData, loading } =
-    useFetch(createUser);
+  const { fetchData, loading } = useFetch(createUser);
 
-  const [formData, setFormData] =
-    useState({
-      name: "",
-      email: "",
-      password: "",
-    });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]:
-        e.target.value,
-    });
+  const handleChange = ({ target }) => {
+    const { name, value } = target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -38,7 +38,7 @@ const CreateUser = ({ refreshUsers }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="border rounded-xl p-5 shadow space-y-4"
+      className="space-y-4 rounded-xl border p-5 shadow"
     >
       <input
         type="text"
@@ -46,7 +46,7 @@ const CreateUser = ({ refreshUsers }) => {
         placeholder="Name"
         value={formData.name}
         onChange={handleChange}
-        className="w-full border p-3 rounded"
+        className="w-full rounded border p-3"
       />
 
       <input
@@ -55,7 +55,7 @@ const CreateUser = ({ refreshUsers }) => {
         placeholder="Email"
         value={formData.email}
         onChange={handleChange}
-        className="w-full border p-3 rounded"
+        className="w-full rounded border p-3"
       />
 
       <input
@@ -64,16 +64,14 @@ const CreateUser = ({ refreshUsers }) => {
         placeholder="Password"
         value={formData.password}
         onChange={handleChange}
-        className="w-full border p-3 rounded"
+        className="w-full rounded border p-3"
       />
 
       <button
         type="submit"
-        className="bg-blue-500 text-white px-4 py-2 rounded"
+        className="rounded bg-blue-500 px-4 py-2 text-white"
       >
-        {loading
-          ? "Creating..."
-          : "Create User"}
+        {loading ? "Creating..." : "Create User"}
       </button>
     </form>
   );

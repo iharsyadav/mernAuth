@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 
-import ThemeToggle from "@/components/ui/ThemeToggle";
+import ThemeToggle from "@/shared/component/ui/ThemeToggle";
 
 export default function RootLayout() {
   return (

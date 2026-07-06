@@ -2,31 +2,21 @@
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 // Reusable API Client
-export const apiClient = async (
-  endpoint,
-  options = {}
-) => {
+export const apiClient = async (endpoint, options = {}) => {
   try {
-    const response = await fetch(
-      `${BASE_URL}${endpoint}`,
-      {
-        headers: {
-          "Content-Type":
-            "application/json",
-        },
+    const response = await fetch(`${BASE_URL}${endpoint}`, {
+      headers: {
+        "Content-Type": "application/json",
+        ...options.headers,
+      },
 
-        ...options,
-      }
-    );
+      ...options,
+    });
 
-    const data =
-      await response.json();
+    const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(
-        data.message ||
-          "Something went wrong"
-      );
+      throw new Error(data.message || "Something went wrong");
     }
 
     return data;
