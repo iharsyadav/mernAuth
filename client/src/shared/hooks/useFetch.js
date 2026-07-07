@@ -1,33 +1,28 @@
 import { useState } from "react";
 
 const useFetch = (apiFunction) => {
-
-  const [data, setData] = useState(null);
-
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-
   const [error, setError] = useState(null);
 
   const fetchData = async (...args) => {
-
     try {
-
       setLoading(true);
-
       setError(null);
 
       const response = await apiFunction(...args);
 
-      setData(response);
+      // unwrap ApiResponse
+      const result = response.data;
 
-      return response;
+      setData(result);
 
+      return result;
     } catch (err) {
-
+      console.error(err);
       setError(err.message);
-
+      throw err;
     } finally {
-
       setLoading(false);
     }
   };

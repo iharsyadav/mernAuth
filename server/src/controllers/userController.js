@@ -1,39 +1,81 @@
-import User from "../models/User.js";
+import asyncHandler from "../utils/asyncHandler.js";
+import ApiResponse from "../utils/ApiResponse.js";
 
-// Create User
-export const createUser = async (req, res) => {
-  try {
-    const user = await User.create(req.body);
-    res.status(201).json(user);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
+import userService from "../services/userService.js";
 
-// Get All Users
-export const getUsers = async (req, res) => {
-  const users = await User.find();
-  res.json(users);
-};
+/* ==========================================================
+   Create User
+========================================================== */
 
-// Get Single User
-export const getUserById = async (req, res) => {
-  const user = await User.findById(req.params.id);
-  res.json(user);
-};
+export const createUser = asyncHandler(async (req, res) => {
+  const user = await userService.createUser(req.body);
 
-// Update User
-export const updateUser = async (req, res) => {
-  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
+  return res.status(201).json(
+    ApiResponse.created({
+      message: "User created successfully.",
+      data: user,
+    })
+  );
+});
 
-  res.json(user);
-};
+/* ==========================================================
+   Get Users
+========================================================== */
 
-// Delete User
-export const deleteUser = async (req, res) => {
-  await User.findByIdAndDelete(req.params.id);
+export const getUsers = asyncHandler(async (req, res) => {
+  const users = await userService.getUsers();
 
-  res.json({ message: "User deleted" });
-};
+  return res.status(200).json(
+    ApiResponse.success({
+      message: "Users fetched successfully.",
+      data: users,
+    })
+  );
+});
+
+/* ==========================================================
+   Get User
+========================================================== */
+
+export const getUserById = asyncHandler(async (req, res) => {
+  const user = await userService.getUser(req.params.id);
+
+  return res.status(200).json(
+    ApiResponse.success({
+      message: "User fetched successfully.",
+      data: user,
+    })
+  );
+});
+
+/* ==========================================================
+   Update User
+========================================================== */
+
+export const updateUser = asyncHandler(async (req, res) => {
+  const user = await userService.updateUser(
+    req.params.id,
+    req.body
+  );
+
+  return res.status(200).json(
+    ApiResponse.success({
+      message: "User updated successfully.",
+      data: user,
+    })
+  );
+});
+
+/* ==========================================================
+   Delete User
+========================================================== */
+
+export const deleteUser = asyncHandler(async (req, res) => {
+  await userService.deleteUser(req.params.id);
+
+  return res.status(200).json(
+    ApiResponse.success({
+      message: "User deleted successfully.",
+    })
+  );
+});

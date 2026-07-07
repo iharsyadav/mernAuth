@@ -15,7 +15,15 @@ const UsersPage = () => {
   } = useFetch(getUsers);
 
   useEffect(() => {
-    loadUsers();
+    const fetchUsers = async () => {
+      try {
+        await loadUsers();
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchUsers();
   }, []);
 
   if (loading) {
@@ -70,7 +78,11 @@ const UsersPage = () => {
             Manage Users
           </h1>
 
-          <CreateUser refreshUsers={loadUsers} />
+          <CreateUser
+            refreshUsers={async () => {
+              await loadUsers();
+            }}
+          />
 
           <div className="mt-8">
             <UserList users={users} refreshUsers={loadUsers} />

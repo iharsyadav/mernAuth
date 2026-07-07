@@ -1,11 +1,14 @@
 // src/app/providers.jsx
 
 import ThemeProvider from "../context/ThemeProvider";
+import { AuthProvider } from "@/features/auth/context/AuthContext";
 
 const Providers = ({ children }) => {
   return (
     <ThemeProvider>
-      {children}
+      <AuthProvider>
+        {children}
+      </AuthProvider>
     </ThemeProvider>
   );
 };
