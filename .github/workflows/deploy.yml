@@ -24,24 +24,32 @@ jobs:
         run: npm install -g vercel
 
       - name: Install Client Dependencies
-        working-directory: client
         run: npm install
+        working-directory: client
 
       - name: Pull Vercel Project Settings
-        working-directory: client
         env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
-          vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+          vercel pull --yes --environment=production
+
+      - name: Build Frontend
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          vercel build --prod
 
       - name: Deploy Frontend
-        working-directory: client
         env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
-          vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }}
+          vercel deploy --prebuilt --prod
 
       - name: Deploy Backend
         run: |
